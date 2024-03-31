@@ -1,0 +1,46 @@
+pipeline {
+    docker { image: debian:bookworm-slim }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', 
+                  branches: [[name: '*/master']],
+                  userRemoteConfigs: [[ url: 'https://github.com/openssl/openssl' ]],
+                  extensions: [[$class: 'CloneOption', noTags: false, reference: '', shallow: false]],
+                  tag: 'openssl-3.2.1'
+                ],
+                dir: 'openssl-src'
+              )  
+           }
+        }
+        stage('Build') {
+            steps {
+                cd 'openssl-src'
+                ./configure
+                make
+                make test || { echo "make test has failed!"; exit 1; }
+                make install
+            }
+//            post {
+//                failure {
+//                          slackSend channel: '#jenkins', message: "Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+//                } 
+        }
+        stage('Package') {
+            steps {
+                dir('openssl-src') {
+                    sh 'dpkg-deb --build openssl'
+                }
+                archiveArtifacts artifacts: 'openssl-src/openssl.deb'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sshagent([ssh-key]) 
+                scp openssl.deb user@$SERVER:/tmp
+                dpkg -i /tmp/openssl.deb
+            }
+        }
+    }
+}
