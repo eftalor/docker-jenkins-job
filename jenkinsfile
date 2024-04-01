@@ -19,7 +19,7 @@ pipeline {
                 script {
                     sh './Configure --prefix=/tmp/openssl'
                     sh 'make -j$(nproc)'
-                    sh 'make test || { echo "make test has failed!"; exit 1; }'
+                    sh 'make test -j$(nproc) || { echo "make test has failed!"; exit 1; }'
                     sh 'make install'
                 }
             }
