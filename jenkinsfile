@@ -3,7 +3,6 @@ pipeline {
         dockerfile {
             filename 'Dockerfile'
             label 'docker-build'
-            reuseNode true
         }
     }
     stages {
