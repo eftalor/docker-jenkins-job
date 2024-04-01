@@ -17,7 +17,6 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    {
                         sh 'cd openssl && ./Configure --prefix=./openssl-compiled'
                         sh 'make'
                         sh 'make test || { echo "make test has failed!"; exit 1; }'
