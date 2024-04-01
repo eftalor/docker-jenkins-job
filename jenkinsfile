@@ -10,6 +10,7 @@ pipeline {
                 checkout([$class: 'GitSCM',
                           branches: [[name: "refs/tags/openssl-3.2.1"]],
                           userRemoteConfigs: [[url: 'https://github.com/openssl/openssl']],
+                          dir: 'openssl'
                           ])
             }
         }
@@ -17,7 +18,7 @@ pipeline {
             steps {
                 script {
                     dir('openssl') {
-                        sh 'cd openssl && ./Configure --prefix=/openssl-compiled'
+                        sh '/Configure --prefix=./openssl-compiled'
                         sh 'make'
                         sh 'make test || { echo "make test has failed!"; exit 1; }'
                         sh 'make install'
