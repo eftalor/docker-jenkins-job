@@ -31,12 +31,9 @@ pipeline {
                     }
                 }
             }
-        }
         stage('Package') {
             steps {
-                dir('openssl') {
                     sh 'dpkg-deb --build openssl-compiled'
-                }
                 archiveArtifacts artifacts: 'openssl-compiled/openssl.deb'
             }
         }
@@ -45,4 +42,5 @@ pipeline {
                 sh 'scp openssl-compiled/openssl.deb user@172.17.0.3:/tmp'
             }
         }
+    }
 }
