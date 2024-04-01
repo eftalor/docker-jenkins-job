@@ -17,7 +17,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh './Configure --prefix=/opt/openssl'
+                    sh './Configure --prefix=/tmp/openssl'
                     sh 'make -j$(nproc)'
                     sh 'make test || { echo "make test has failed!"; exit 1; }'
                     sh 'make install'
@@ -33,8 +33,8 @@ pipeline {
         }
         stage('Package') {
             steps {
-                    sh 'mkdir -p /opt/openssl/DEBIAN'
-                    sh '/opt/openssl/* /opt/openssl/DEBIAN'
+                    sh 'mkdir -p /tmp/openssl/DEBIAN'
+                    sh '/tmp/openssl/* /tmp/openssl/DEBIAN'
                     writefile file: '/opt/openssl/DEBIAN/control', text: '''
                     Package: openssl
                     Version: 3.2.1
@@ -42,13 +42,13 @@ pipeline {
                     Maintainer: Effie Talor eftalor@gmail.com
                     Description: OpenSSL
                     '''
-                    sh 'dpkg-deb --build /opt/openssl/openssl-compiled'
-                archiveArtifacts artifacts: 'openssl-compiled/openssl.deb'
+                    sh 'dpkg-deb --build /tmp/openssl/openssl-compiled'
+                archiveArtifacts artifacts: '/tmp/openssl/openssl-compiled/openssl.deb'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'scp openssl-compiled/openssl.deb user@172.17.0.3:/tmp'
+                sh 'scp /tmp/openssl/openssl-compiled/openssl.deb user@172.17.0.3:/tmp'
             }
         }
     }
