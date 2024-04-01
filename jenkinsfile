@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     sh './Configure --prefix=/opt/openssl'
-                    sh 'make'
+                    sh 'make -j$(nproc)'
                     sh 'make test || { echo "make test has failed!"; exit 1; }'
                     sh 'make install'
                 }
