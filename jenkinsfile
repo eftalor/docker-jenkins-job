@@ -23,7 +23,6 @@ pipeline {
                     sh 'make install'
                 }
             }
-        }
             post {
                 failure {
                     script {
@@ -31,6 +30,7 @@ pipeline {
                     }
                 }
             }
+        }
         stage('Package') {
             steps {
                     sh 'dpkg-deb --build openssl-compiled'
