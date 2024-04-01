@@ -33,7 +33,7 @@ pipeline {
         }
         stage('Package') {
             steps {
-                writefile file: '/tmp/openssl/DEBIAN/control', text: '''
+                writeFile file: '/tmp/openssl/DEBIAN/control', text: '''
                     Package: openssl
                     Version: 3.2.1
                     Architecture: amd64
