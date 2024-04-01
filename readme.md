@@ -1,12 +1,21 @@
-#Jenkinsfile for compiling pacaking and deploying openssl
+# Jenkinsfile for compiling pacaking and deploying openssl
 
-##The Jenkinsfile
+## The Jenkinsfile
 
-##Prerequisits:
+## Prerequisits:
 
-Jenkins with Docker Plugin
+### Jenkins with the follwing plugins:
+ - Docker Pipeline
+ - Git plugin
+ - SSH Credentials Plugin
 
-##How to run this in Jenkins
+###  The follwoing should have been installed by default:
+ - Pipeline
+ - Plugin Utilities API Plugin
+ - Credentials plugin
+
+
+## How to run this in Jenkins
 
 In your Jenkins instance, go to: New Item --> Enter an item name
 

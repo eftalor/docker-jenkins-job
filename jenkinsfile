@@ -1,10 +1,9 @@
 pipeline {
     agent {
         docker {
-            image 'debian:bookworm-slim'
+            image 'debian:stable'
         }
     }
-    
     stages {
         stage('Checkout') {
             steps {
@@ -16,7 +15,6 @@ pipeline {
                           dir: 'openssl-src'])
             }
         }
-        
         stage('Build') {
             steps {
                 script {
@@ -36,7 +34,6 @@ pipeline {
                 }
             }
         }
-        
         stage('Package') {
             steps {
                 dir('openssl-src') {
@@ -45,7 +42,6 @@ pipeline {
                 archiveArtifacts artifacts: 'openssl-src/openssl.deb'
             }
         }
-        
         stage('Deploy') {
             steps {
                 sh 'scp openssl-src/openssl.deb user@172.17.0.3:/tmp'
