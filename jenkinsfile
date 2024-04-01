@@ -45,5 +45,4 @@ pipeline {
                 sh 'scp openssl-compiled/openssl.deb user@172.17.0.3:/tmp'
             }
         }
-    }
 }
