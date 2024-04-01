@@ -8,17 +8,15 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM',
-                          branches: [[name: '*/master']],
+                          branches: [[name: "refs/tags/openssl-3.2.1"]],
                           userRemoteConfigs: [[url: 'https://github.com/openssl/openssl']],
-                          extensions: [[$class: 'CloneOption', noTags: false, reference: '', shallow: false]],
-                          tag: 'openssl-3.2.1',
-                          dir: 'openssl-src'])
+                          ])
             }
         }
         stage('Build') {
             steps {
                 script {
-                    dir('openssl-src') {
+                    dir('openssl') {
                         sh './config'
                         sh 'make'
                         sh 'make test || { echo "make test has failed!"; exit 1; }'
@@ -36,7 +34,7 @@ pipeline {
         }
         stage('Package') {
             steps {
-                dir('openssl-src') {
+                dir('openssl') {
                     sh 'dpkg-deb --build openssl'
                 }
                 archiveArtifacts artifacts: 'openssl-src/openssl.deb'
@@ -44,7 +42,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'scp openssl-src/openssl.deb user@172.17.0.3:/tmp'
+                sh 'scp openssl/openssl.deb user@172.17.0.3:/tmp'
             }
         }
     }
