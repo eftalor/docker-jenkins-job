@@ -33,14 +33,14 @@ pipeline {
         }
         stage('Package') {
             steps {
-                    writefile file: '/tmp/openssl/DEBIAN/control', text: '''
+                writefile file: '/tmp/openssl/DEBIAN/control', text: '''
                     Package: openssl
                     Version: 3.2.1
                     Architecture: amd64
-                    Maintainer: Effie Talor eftalor@gmail.com
+                    Maintainer: Effie Talor <eftalor@gmail.com>
                     Description: OpenSSL
-                    '''
-                    sh 'dpkg-deb --build /tmp/openssl/'
+                '''
+                sh 'dpkg-deb --build /tmp/openssl/'
                 archiveArtifacts artifacts: '/tmp/openssl/openssl.deb'
             }
         }
