@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     dir('openssl') {
-                        sh './Configure'
+                        sh './Configure --prefix=/openssl-compiled'
                         sh 'make'
                         sh 'make test || { echo "make test has failed!"; exit 1; }'
                         sh 'make install'
@@ -35,14 +35,14 @@ pipeline {
         stage('Package') {
             steps {
                 dir('openssl') {
-                    sh 'dpkg-deb --build openssl'
+                    sh 'dpkg-deb --build openssl-compiled'
                 }
-                archiveArtifacts artifacts: 'openssl-src/openssl.deb'
+                archiveArtifacts artifacts: 'openssl-compiled/openssl.deb'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'scp openssl/openssl.deb user@172.17.0.3:/tmp'
+                sh 'scp openssl-compiled/openssl.deb user@172.17.0.3:/tmp'
             }
         }
     }
