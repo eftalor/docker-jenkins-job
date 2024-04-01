@@ -33,8 +33,6 @@ pipeline {
         }
         stage('Package') {
             steps {
-                    sh 'mkdir -p /tmp/openssl/DEBIAN'
-                    sh 'cp -r /tmp/openssl/* /tmp/openssl/DEBIAN'
                     writefile file: '/tmp/openssl/DEBIAN/control', text: '''
                     Package: openssl
                     Version: 3.2.1
@@ -42,8 +40,8 @@ pipeline {
                     Maintainer: Effie Talor eftalor@gmail.com
                     Description: OpenSSL
                     '''
-                    sh 'dpkg-deb --build /tmp/openssl/DEBIAN'
-                archiveArtifacts artifacts: '/tmp/openssl/DEBIAN/openssl.deb'
+                    sh 'dpkg-deb --build /tmp/openssl/'
+                archiveArtifacts artifacts: '/tmp/openssl/openssl.deb'
             }
         }
         stage('Deploy') {
