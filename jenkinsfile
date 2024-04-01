@@ -11,6 +11,7 @@ pipeline {
                           branches: [[name: "refs/tags/openssl-3.2.1"]],
                           userRemoteConfigs: [[url: 'https://github.com/openssl/openssl']],
                           dir: 'openssl'
+                          reuseNode: true
                           ])
             }
         }
@@ -34,21 +35,21 @@ pipeline {
         stage('Package') {
             steps {
                     sh 'mkdir -p /tmp/openssl/DEBIAN'
-                    sh '/tmp/openssl/* /tmp/openssl/DEBIAN'
-                    writefile file: '/opt/openssl/DEBIAN/control', text: '''
+                    sh 'cp /tmp/openssl/* /tmp/openssl/DEBIAN'
+                    writefile file: '/tmp/openssl/DEBIAN/control', text: '''
                     Package: openssl
                     Version: 3.2.1
                     Architecture: amd64
                     Maintainer: Effie Talor eftalor@gmail.com
                     Description: OpenSSL
                     '''
-                    sh 'dpkg-deb --build /tmp/openssl/openssl-compiled'
-                archiveArtifacts artifacts: '/tmp/openssl/openssl-compiled/openssl.deb'
+                    sh 'dpkg-deb --build /tmp/openssl/DEBIAN'
+                archiveArtifacts artifacts: '/tmp/openssl/DEBIAN/openssl.deb'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'scp /tmp/openssl/openssl-compiled/openssl.deb user@172.17.0.3:/tmp'
+                sh 'scp /tmp/openssl/openssl-compiled/openssl.deb root@172.17.0.4:/tmp'
             }
         }
     }
