@@ -1,7 +1,9 @@
 pipeline {
     agent {
-        docker {
-            image 'debian:stable'
+        dockerfile {
+            filename 'Dockerfile'
+            label 'docker-build'
+            reuseNode true
         }
     }
     stages {
