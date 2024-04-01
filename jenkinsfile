@@ -1,32 +1,42 @@
 pipeline {
-    docker { image: debian:bookworm-slim }
-
+    agent {
+        docker {
+            image 'debian:bookworm-slim'
+        }
+    }
+    
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', 
-                  branches: [[name: '*/master']],
-                  userRemoteConfigs: [[ url: 'https://github.com/openssl/openssl' ]],
-                  extensions: [[$class: 'CloneOption', noTags: false, reference: '', shallow: false]],
-                  tag: 'openssl-3.2.1'
-                ],
-                dir: 'openssl-src'
-              )  
-           }
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/master']],
+                          userRemoteConfigs: [[url: 'https://github.com/openssl/openssl']],
+                          extensions: [[$class: 'CloneOption', noTags: false, reference: '', shallow: false]],
+                          tag: 'openssl-3.2.1',
+                          dir: 'openssl-src'])
+            }
         }
+        
         stage('Build') {
             steps {
-                cd 'openssl-src'
-                ./configure
-                make
-                make test || { echo "make test has failed!"; exit 1; }
-                make install
+                script {
+                    dir('openssl-src') {
+                        sh './config'
+                        sh 'make'
+                        sh 'make test || { echo "make test has failed!"; exit 1; }'
+                        sh 'make install'
+                    }
+                }
             }
-//            post {
-//                failure {
-//                          slackSend channel: '#jenkins', message: "Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER}"
-//                } 
+            post {
+                failure {
+                    script {
+                        echo 'Build failed'
+                    }
+                }
+            }
         }
+        
         stage('Package') {
             steps {
                 dir('openssl-src') {
@@ -35,11 +45,10 @@ pipeline {
                 archiveArtifacts artifacts: 'openssl-src/openssl.deb'
             }
         }
+        
         stage('Deploy') {
             steps {
-                sshagent([ssh-key]) 
-                scp openssl.deb user@$SERVER:/tmp
-                dpkg -i /tmp/openssl.deb
+                sh 'scp openssl-src/openssl.deb user@172.17.0.3:/tmp'
             }
         }
     }
