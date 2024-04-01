@@ -34,7 +34,7 @@ pipeline {
         stage('Package') {
             steps {
                     sh 'mkdir -p /tmp/openssl/DEBIAN'
-                    sh 'cp /tmp/openssl/* /tmp/openssl/DEBIAN'
+                    sh 'cp -r /tmp/openssl/* /tmp/openssl/DEBIAN'
                     writefile file: '/tmp/openssl/DEBIAN/control', text: '''
                     Package: openssl
                     Version: 3.2.1
@@ -47,9 +47,17 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {
-                sh 'scp /tmp/openssl/openssl-compiled/openssl.deb root@172.17.0.4:/tmp'
+            environment {
+                SERVER_IP = '172.17.0.3'
+                REMOTE_DIR = '/tmp'        // Replace with the destination directory on the server
             }
+            steps {
+                 withCredentials([usernamePassword(credentialsId: 'your-credentials-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                     sshagent(credentials: ['your-credentials-id']) {
+                        sh "scp openssl-compiled/openssl.deb ${USERNAME}@${SERVER_IP}:${REMOTE_DIR}"
+                        sh "ssh ${USERNAME}@${SERVER_IP} 'sudo dpkg -i ${REMOTE_DIR}/openssl.deb'"
+        }
+    }
         }
     }
 }
