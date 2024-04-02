@@ -33,12 +33,12 @@ pipeline {
         }
         stage('Package') {
             steps {
-                writeFile file: '/tmp/openssl/DEBIAN/control', text: '''
-                    Package: openssl
-                    Version: 3.2.1
-                    Architecture: amd64
-                    Maintainer: Effie Talor <eftalor@gmail.com>
-                    Description: OpenSSL
+                sh '''
+                    echo "Package: openssl" > /tmp/openssl/DEBIAN/control
+                    echo "Version: 3.2.1" >> /tmp/openssl/DEBIAN/control
+                    echo "Architecture: amd64" >> /tmp/openssl/DEBIAN/control
+                    echo "Maintainer: Effie Talor <eftalor@gmail.com>" >> /tmp/openssl/DEBIAN/control
+                    echo "Description: OpenSSL" >> /tmp/openssl/DEBIAN/control
                 '''
                 sh 'dpkg-deb --build /tmp/openssl'
                 archiveArtifacts artifacts: '/tmp/openssl/openssl.deb'
