@@ -42,8 +42,8 @@ pipeline {
                     echo "Maintainer: John Deo <x1234@gmail.com>" >> /tmp/openssl/DEBIAN/control
                     echo "Description: OpenSSL" >> /tmp/openssl/DEBIAN/control
                 '''
-                sh 'dpkg-deb --build /tmp/openssl /tmp/openssl/openssl.deb'
-                archiveArtifacts artifacts: '/tmp/openssl/openssl.deb'
+                sh 'dpkg-deb --build /tmp/openssl /tmp/openssl.deb'
+                archiveArtifacts artifacts: '/tmp/openssl.deb'
             }
         }
         stage('Deploy') {
