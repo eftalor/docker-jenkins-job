@@ -40,7 +40,7 @@ In your Jenkins instance, go to: `New Item` --> `Enter an item name`
 
 Select `Pipeline`
 
-Scroll to `Pipline Definition` --> select `pipeline script from SCM` , confiugre the follwing fields:
+Scroll to `Pipline Definition` --> select `pipeline script from SCM` , configugre the follwing fields:
 
 `SCM:` --> __Git__
 
@@ -48,6 +48,6 @@ Scroll to `Pipline Definition` --> select `pipeline script from SCM` , confiugre
 
 `Branches to build:` __*/main__
 
-`Script path:` __Jenkinsfile__
+`Script path:` __jenkinsfile__
 
 Click save
