@@ -34,11 +34,12 @@ pipeline {
         stage('Package') {
             steps {
                 sh '''
+                    mkdir -p /tmp/openssl/DEBIAN
                     echo "Package: openssl" > /tmp/openssl/DEBIAN/control
                     echo "Version: 3.2.1" >> /tmp/openssl/DEBIAN/control
                     echo "Architecture: amd64" >> /tmp/openssl/DEBIAN/control
                     echo "Maintainer: Effie Talor <eftalor@gmail.com>" >> /tmp/openssl/DEBIAN/control
-                    echo "Description: OpenSSL" >> /tmp/openssl/DEBIAN/control
+                    echo "Description: OpenSSL"
                 '''
                 sh 'dpkg-deb --build /tmp/openssl'
                 archiveArtifacts artifacts: '/tmp/openssl/openssl.deb'
