@@ -2,6 +2,9 @@
 
 ## The Jenkinsfile
 
+### Agent
+The Jenkinsfile sets up a Docker container, based on the definition within the `Dockerfile` in this repository, will create a Debian (stable) container, and willinstall the development tools for compiling.
+
 ### Step Checkout
 checks out openssl-3.2.1 from github
 
@@ -50,4 +53,5 @@ Scroll to `Pipline Definition` --> select `pipeline script from SCM` , configure
 
 `Script path:` __jenkinsfile__
 
-Click save
+Define credentials for ssh access to the server, via Jenkins (Manage Jenkins --> Credentials --> System --> Global credentials) , with ID:
+`eto1` (or change the `credentialsId` in the __Deploy__ step in the Jenkinsfile)
