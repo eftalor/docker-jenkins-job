@@ -42,7 +42,7 @@ pipeline {
                     echo "Description: OpenSSL" >> /tmp/openssl/DEBIAN/control
                 '''
                 sh 'dpkg-deb --build /tmp/openssl'
-                archiveArtifacts artifacts: '/tmp/openssl/openssl.deb'
+                archiveArtifacts artifacts: '/tmp/openssl.deb'
             }
         }
         stage('Deploy') {
