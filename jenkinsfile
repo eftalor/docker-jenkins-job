@@ -66,7 +66,7 @@ pipeline {
          */
         stage('Deploy') {
             environment {
-                SERVER_IP = '172.17.0.4'
+                SERVER_IP = '172.17.0.2'
                 REMOTE_DIR = '/tmp'        // Replace with the destination directory on the server
             }
             steps {
