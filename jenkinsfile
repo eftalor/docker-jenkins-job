@@ -40,7 +40,7 @@ pipeline {
                     Maintainer: Effie Talor <eftalor@gmail.com>
                     Description: OpenSSL
                 '''
-                sh 'dpkg-deb --build /tmp/openssl/'
+                sh 'dpkg-deb --build /tmp/openssl'
                 archiveArtifacts artifacts: '/tmp/openssl/openssl.deb'
             }
         }
