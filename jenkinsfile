@@ -56,7 +56,7 @@ pipeline {
                     echo "Description: OpenSSL" >> /tmp/openssl/DEBIAN/control
                 '''
                 sh 'dpkg-deb --build /tmp/openssl /tmp/openssl.deb'
-                archiveArtifacts artifacts: '/tmp/openssl.deb'
+                //archiveArtifacts artifacts: '/tmp/openssl.deb'
             }
         }
                 /**
