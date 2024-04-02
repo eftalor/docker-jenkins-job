@@ -40,7 +40,7 @@ In your Jenkins instance, go to: `New Item` --> `Enter an item name`
 
 Select `Pipeline`
 
-Scroll to `Pipline Definition` --> select `pipeline script from SCM` , configugre the follwing fields:
+Scroll to `Pipline Definition` --> select `pipeline script from SCM` , configure the follwing fields:
 
 `SCM:` --> __Git__
 

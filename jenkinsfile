@@ -5,16 +5,25 @@ pipeline {
             args '-v /tmp/openssl:/tmp/openssl'
         }
     }
+        /**
+     * Checks out the OpenSSL source code from the specified Git tag into the openssl directory.
+     * The Git repository URL, tag, and destination directory are configured.
+     */
     stages {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM',
-                          branches: [[name: "refs/tags/openssl-3.2.1"]],
+                          branches: [[name: 'refs/tags/openssl-3.2.1']],
                           userRemoteConfigs: [[url: 'https://github.com/openssl/openssl']],
                           dir: 'openssl'
                           ])
             }
         }
+                /**
+         * Build stage to build OpenSSL from source.
+         * Configures with prefix, builds with parallel make, runs tests, and installs.
+         * Has post failure handler to print error on build failure.
+        */
         stage('Build') {
             steps {
                 script {
@@ -32,6 +41,10 @@ pipeline {
                 }
             }
         }
+                /**
+         * Package stage to build a Debian package for the compiled OpenSSL library.
+         * Creates the Debian package metadata, builds the .deb package, and archives it.
+        */
         stage('Package') {
             steps {
                 sh '''
@@ -46,6 +59,11 @@ pipeline {
                 archiveArtifacts artifacts: '/tmp/openssl.deb'
             }
         }
+                /**
+         * Deploy stage to deploy the compiled OpenSSL library to a remote server.
+         * Uses SSH with credentials to copy the .deb package to the server.
+         * Installs the package on the server using dpkg.
+         */
         stage('Deploy') {
             environment {
                 SERVER_IP = '172.17.0.4'
