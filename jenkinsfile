@@ -71,7 +71,7 @@ pipeline {
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'eto1', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sshagent(credentials: ['your-credentials-id']) {
+                    sshagent(credentials: ['eto1']) {
                         sh "scp openssl-compiled/openssl.deb ${USERNAME}@${SERVER_IP}:${REMOTE_DIR}"
                         sh "ssh ${USERNAME}@${SERVER_IP} 'sudo dpkg -i ${REMOTE_DIR}/openssl.deb'"
                     }
